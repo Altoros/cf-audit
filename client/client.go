@@ -1,7 +1,7 @@
 package client
 
 import (
-	"code.cloudfoundry.org/cli/cf/api"
+	"github.com/cloudfoundry-community/go-cfclient"
 )
 
 type CloudFoundryClient struct {
