@@ -14,7 +14,7 @@ func StartPool(pbs ...*ProgressBar) (pool *Pool, err error) {
 	if err = pool.start(); err != nil {
 		return
 	}
-	pool.Add(pbs...)
+	pool.add(pbs...)
 	return
 }
 
@@ -25,8 +25,7 @@ type Pool struct {
 	finishOnce  sync.Once
 }
 
-// Add progress bars.
-func (p *Pool) Add(pbs ...*ProgressBar) {
+func (p *Pool) add(pbs ...*ProgressBar) {
 	for _, bar := range pbs {
 		bar.ManualUpdate = true
 		bar.NotPrint = true

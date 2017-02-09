@@ -1,7 +1,8 @@
-github.com/cloudfoundry-community/go-cfclient:856f096
+github.com/cloudfoundry-community/go-cfclient:59ed46d
 github.com/cloudfoundry-incubator/candiedyaml:99c3df8
 github.com/jessevdk/go-flags:4e64e4a
-github.com/cloudfoundry/bosh-utils/logger:eafd657
+github.com/cloudfoundry/bosh-utils/logger:5ea2f70
 github.com/cloudfoundry/config-server:973c15a
 github.com/cheggaaa/pb:d7e6ca3
 github.com/cloudfoundry/bosh-cli:b57c341
+github.com/cloudfoundry/bosh-utils/errors:5ea2f70
