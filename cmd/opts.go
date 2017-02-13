@@ -17,7 +17,18 @@ type CommandOpts struct {
 
 type DiffOpts struct {
 	Args []string `positional-args:"true" required:"false"`
+	CloudFoundriesNamesOpt
+	VaultFlags
 	cmd
+}
+
+type CloudFoundriesNamesOpt struct {
+	CloudFoundriesNamesOpt string `long:"cloudfoundries" description:"Used with Vault, a comma separated list of foundation names (required, if you use Vault to load foundation creds)" env:"CLOUDFOUNDRIES"`
+}
+
+type VaultFlags struct {
+	VaultAddrOpt  bool `long:"vault-addr" description:"Vault address (optional)" env:"VAULT_ADDR"`
+	VaultTokenOpt bool `long:"vault-token" description:"Vault token (optional)" env:"VAULT_TOKEN"`
 }
 
 // MessageOpts is used for version and help flags

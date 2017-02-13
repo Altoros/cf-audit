@@ -1,37 +1,19 @@
 package config
 
 import (
-	"errors"
+	// "errors"
 	cfclient "github.com/cloudfoundry-community/go-cfclient"
-	"github.com/cloudfoundry-incubator/candiedyaml"
-	"os"
+	//"github.com/cloudfoundry-incubator/candiedyaml"
+	//"os"
 )
 
-type Foundations []Foundation
-
-type Counfig struct {
-	Foundations Foundations `yaml:"foundations"`
-}
+type CloudFoundries []Foundation
 
 type Foundation struct {
 	Name     string
 	Api      string
 	Username string
 	Password string
-}
-
-func LoadFromFile(path string) (Config, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return Config{}, err
-	}
-
-	var config Config
-	if err := candiedyaml.NewDecoder(file).Decode(&config); err != nil {
-		return Config{}, err
-	}
-	// TODO: add validations here
-	return config, nil
 }
 
 func (f *Foundation) CloudFoundryClient() (*cfclient.Client, error) {
