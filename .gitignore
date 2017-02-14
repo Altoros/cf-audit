@@ -1,3 +1,6 @@
 foundations.yml
 .envrc
 cf-audit
+*.iml
+.idea
+

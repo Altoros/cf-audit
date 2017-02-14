@@ -1,20 +1,15 @@
-package client
+package cloudfoundry
 
 import (
 	cfclient "github.com/cloudfoundry-community/go-cfclient"
 )
 
-type CloudFoundryCredentials struct {
-	Host     string
-	Username string
-	Password string
-}
-
-func NewCloudFoundryClient(ApiUrl string, Username string, Password string) (*cfclient.Client, error) {
+func NewCloudFoundryClient(apiAddress string, username string, password string) (*cfclient.Client, error) {
 	clientConfig := &cfclient.Config{
-		ApiAddress: f.Api,
-		Username:   f.Username,
-		Password:   f.Password,
+		ApiAddress:        apiAddress,
+		Username:          username,
+		Password:          password,
+		SkipSslValidation: true,
 	}
 
 	client, err := cfclient.NewClient(clientConfig)

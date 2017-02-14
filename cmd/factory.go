@@ -36,7 +36,9 @@ func (f Factory) New(args []string) (Cmd, error) {
 
 	parser.CommandHandler = func(command goflags.Commander, extraArgs []string) error {
 		// if opts, ok := command.(*DiffOpts); ok {
+		// 	// opts.Command =
 		// 	// opts.Args =
+		// 	fmt.Println("asdsad")
 		// }
 
 		if len(extraArgs) > 0 {

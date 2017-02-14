@@ -2,12 +2,10 @@ package cmd
 
 type CommandOpts struct {
 	// -----> Global options
-	VersionOpt    func() error `long:"version" short:"v" description:"Show CLI version"`
-	ConfigFileOpt string       `long:"config" short:"c" description:"Fetch variables" env:"CONFIG_FILE"`
-	Help          HelpOpts     `command:"help" description:"Show this help message"`
-
-	// Instance management
-	Diff DiffOpts `command:"diff"     description:"show diff between several CF installatino"`
+	VersionOpt func() error `long:"version" short:"v" description:"Show CLI version"`
+	// ConfigFileOpt string       `long:"config" short:"c" description:"Fetch variables" env:"CONFIG_FILE"`
+	Help HelpOpts `command:"help" description:"Show this help message"`
+	Diff DiffOpts `command:"diff" alias:"d" description:"show diff between several CF installatino"`
 
 	JSONOpt           bool `long:"json"                      description:"Output as JSON"`
 	NonInteractiveOpt bool `long:"non-interactive" short:"n" description:"Don't ask for user input"`
@@ -16,19 +14,24 @@ type CommandOpts struct {
 }
 
 type DiffOpts struct {
-	Args []string `positional-args:"true" required:"false"`
-	CloudFoundriesNamesOpt
+	// Args []string `positional-args:"true" required:"false"`
+	CloudFoundriesNamesFlags
 	VaultFlags
+	ConfigFileFlags
 	cmd
 }
 
-type CloudFoundriesNamesOpt struct {
-	CloudFoundriesNamesOpt string `long:"cloudfoundries" description:"Used with Vault, a comma separated list of foundation names (required, if you use Vault to load foundation creds)" env:"CLOUDFOUNDRIES"`
+type ConfigFileFlags struct {
+	ConfigFileOpt string `long:"config" short:"c" description:"Fetch variables" env:"CONFIG_FILE"`
+}
+
+type CloudFoundriesNamesFlags struct {
+	CloudFoundriesNamesOpt []string `long:"cloudfoundry" description:"Used with Vault, a comma separated list of foundation names (required, if you use Vault to load foundation creds)" env:"CLOUDFOUNDRIES"`
 }
 
 type VaultFlags struct {
-	VaultAddrOpt  bool `long:"vault-addr" description:"Vault address (optional)" env:"VAULT_ADDR"`
-	VaultTokenOpt bool `long:"vault-token" description:"Vault token (optional)" env:"VAULT_TOKEN"`
+	VaultAddrOpt  string `long:"vault-addr" description:"Vault address (optional)" env:"VAULT_ADDR" optional:"true"`
+	VaultTokenOpt string `long:"vault-token" description:"Vault token (optional)" env:"VAULT_TOKEN" optional:"true"`
 }
 
 // MessageOpts is used for version and help flags
@@ -41,6 +44,8 @@ type HelpOpts struct {
 }
 
 type cmd struct{}
+
+func (c cmd) Execute(_ []string) error { panic("Unreachable") }
 
 // command example
 // cf-audit diff -c foundations.yml

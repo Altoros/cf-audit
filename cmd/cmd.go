@@ -2,21 +2,20 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/Altoros/cf-audit/cloudfoundry"
-	"github.com/Altoros/cf-audit/config"
+	// "github.com/Altoros/cf-audit/cloudfoundry"
+	// "github.com/Altoros/cf-audit/config"
 	boshcmd "github.com/cloudfoundry/bosh-cli/cmd"
 )
 
 type Cmd struct {
-	CommandOpts    CommandOpts
-	Opts           interface{}
-	CloudFoundries *cloudfoundry.CloudFoudnries
+	CommandOpts CommandOpts
+	Opts        interface{}
 
 	deps boshcmd.BasicDeps
 }
 
-func NewCmd(CommandOpts CommandOpts, opts interface{}, cloudFoundries *cloudfoundry.CloudFoudnries, deps boshcmd.BasicDeps) Cmd {
-	return Cmd{CommandOpts, opts, cloudFoundries, deps}
+func NewCmd(CommandOpts CommandOpts, opts interface{}, deps boshcmd.BasicDeps) Cmd {
+	return Cmd{CommandOpts, opts, deps}
 }
 
 type cmdConveniencePanic struct {
@@ -42,7 +41,7 @@ func (c Cmd) Execute() (cmdErr error) {
 
 	switch opts := c.Opts.(type) {
 	case *DiffOpts:
-		return NewDiffCmd(deps.UI).Run(c.ConfigLoader, opts)
+		return NewDiffCmd(c).Run(opts)
 	case *MessageOpts:
 		deps.UI.PrintBlock(opts.Message)
 		return nil

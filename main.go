@@ -14,9 +14,8 @@ import (
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
-	"github.com/Altoros/cf-audit/cloudfoundry"
+	// "github.com/Altoros/cf-audit/cloudfoundry"
 	"github.com/Altoros/cf-audit/cmd"
-	"github.com/Altoros/cf-audit/config"
 )
 
 const mainLogTag = "main"

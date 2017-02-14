@@ -2,36 +2,59 @@ package cmd
 
 import (
 	// boshdir "github.com/cloudfoundry/bosh-cli/director"
-	"github.com/Altoros/cf-audit/comparator"
-	"github.com/Altoros/cf-audit/config"
-	boshui "github.com/cloudfoundry/bosh-cli/ui"
+	// cfconfig "github.com/Altoros/cf-audit/cloudfoundry/config"
+	cf "github.com/Altoros/cf-audit/cloudfoundry"
+	// "github.com/Altoros/cf-audit/comparator"
+	boshcmd "github.com/cloudfoundry/bosh-cli/cmd"
+	// boshui "github.com/cloudfoundry/bosh-cli/ui"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 type DiffCmd struct {
-	ui          boshui.UI
-	foundations config.CloudFoundries
-	comporator  comporator.Comporator
+	// ui          boshui.UI
+
+	asd        string
+	globalOpts CommandOpts
+	deps       boshcmd.BasicDeps
+	// foundations config.CloudFoundries
+	// comporator comparator.Comporator
 }
 
-func NewDiffCmd(ui boshui.UI) DiffCmd {
-	return DiffCmd{ui: ui}
+func NewDiffCmd(c Cmd) DiffCmd {
+	return DiffCmd{globalOpts: c.CommandOpts, deps: c.deps}
 }
 
-func (c DiffCmd) Run(configLoader config.ConfigLoader, opts DiffCmdOpts) error {
-	foundations, err := configLoader.LoadCloudFoundries()
+func (c DiffCmd) Run(opts *DiffOpts) error {
+	cfFactory, err := cf.NewFactory(
+		opts.ConfigFileOpt,
+		opts.VaultAddrOpt,
+		opts.VaultTokenOpt,
+		opts.CloudFoundriesNamesOpt,
+		c.deps.Logger)
 	if err != nil {
 		return err
 	}
 
-	// foundations.GetCloudFoundryClient()
+	// spew.Dump(cfFactory)
 
-	factory := comporator.FindCollisions(foundations)
-	c := factory.New(foundations)
-	err := c.Compare()
-	collisions := c.Collisions()
+	cloudfoundries, err := cfFactory.LoadCloudFoundries()
+
+	spew.Dump(cloudfoundries)
+
+	if err != nil {
+		return err
+	}
+
+	cloudfoundries.FindCollisions()
+	// collisions, err := cloudfoundries.FindCollisions()
+
+	// c := factory.New(foundations)
+	// err := c.Compare()
+	// collisions := c.Collisions()
 	//formator := GetFormator(opts.fmtOpts)
 
-	formator.Print(collisions)
+	// formator.Print(collisions)
 	// InfoTable{info, c.ui}.Print()
 
 	return nil

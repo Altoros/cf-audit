@@ -2,44 +2,34 @@ package cloudfoundry
 
 import (
 	// "errors"
-	cfclient "github.com/cloudfoundry-community/go-cfclient"
+	"github.com/Altoros/cf-audit/comparator"
+	// cfclient "github.com/cloudfoundry-community/go-cfclient"
 	//"github.com/cloudfoundry-incubator/candiedyaml"
 	//"os"
+	"github.com/davecgh/go-spew/spew"
 )
 
-type CloudFoundries []CloudFoundry
-
-type CloudFoundry struct {
-	Name   string
-	Client *Client
-	// Api      string
-	// Username string
-	// Password string
-}
-
-func NewCloudFoundry(name string, apiUrl string, username string, password string) (*CloudFoundry, error) {
-	client, err := NewCloudFoundryClient(ApiUrl, Username, Password)
+func NewCloudFoundry(name string, apiAddress string, username string, password string) (*CloudFoundry, error) {
+	client, err := NewCloudFoundryClient(apiAddress, username, password)
 	if err != nil {
 		return nil, err
 	}
 
-	return &CloudFoundry{name, client}
+	return &CloudFoundry{meta: CloudFoundryItem{Name: name, Client: client}}, nil
 }
 
-func (c *CloudFoundry) Equal(Comparable) (bool, error) {
-	return nil, nil
+type CloudFoundries []*CloudFoundry
+
+type CloudFoundry struct {
+	meta CloudFoundryItem
 }
 
-func (c *CloudFoundry) Children() ([]Comparable, error) {
-	return nil, nil
-}
-
-func (c *CloudFoundry) Parent() (*Comparable, error) {
-	return nil, nil
-}
-
-func (c1 *CloudFoundry) Collisions(c2 *Comparable) (Collisions, error) {
+func (cfList CloudFoundries) FindCollisions() (comparator.Collisions, error) {
 	// orgs1 := c1.Client.GetOrgs()
+
+	// spew.Dump(cfList[0])
+	orgs1, _ := cfList[0].meta.Client.ListOrgs()
+	spew.Dump(orgs1)
 
 	// OrgsWithSameNames
 	return nil, nil
