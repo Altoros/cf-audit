@@ -1,4 +1,4 @@
-package comparator_test
+package main_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestComparator(t *testing.T) {
+func TestCfAudit(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Comparator Suite")
+	RunSpecs(t, "CfAudit Suite")
 }

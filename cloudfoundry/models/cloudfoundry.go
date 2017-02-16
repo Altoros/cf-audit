@@ -9,20 +9,23 @@ import (
 	"github.com/davecgh/go-spew/spew"
 )
 
+type CloudFoundries []*CloudFoundry
+
+type CloudFoundry struct {
+	CloudFoundryItem
+}
+
+
 func NewCloudFoundry(name string, apiAddress string, username string, password string) (*CloudFoundry, error) {
 	client, err := NewCloudFoundryClient(apiAddress, username, password)
 	if err != nil {
 		return nil, err
 	}
 
-	return &CloudFoundry{meta: CloudFoundryItem{Name: name, Client: client}}, nil
+	// return &CloudFoundry{meta: CloudFoundryItem{Name: name, Client: client}}, nil
+	return &CloudFoundry{Name: name, Client: client}, nil
 }
 
-type CloudFoundries []*CloudFoundry
-
-type CloudFoundry struct {
-	meta CloudFoundryItem
-}
 
 func (cfList CloudFoundries) FindCollisions() (comparator.Collisions, error) {
 	// orgs1 := c1.Client.GetOrgs()
