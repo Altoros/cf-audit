@@ -15,14 +15,39 @@ var _ = Describe("Comparable", func() {
 	)
 	Describe("FindCollisions", func() {
 		Describe("equal trees", func() {
-			BeforeEach(func() {
-				tree1 = NewNode("name", "value", 42, nil)
-				tree2 = NewNode("name", "value", 42, nil)
+			Describe("child free", func() {
+				BeforeEach(func() {
+					tree1 = NewNode("name", "value", 42, nil)
+					tree2 = NewNode("name", "value", 42, nil)
+				})
+				It("returns no collisions", func() {
+					collisions, err := FindCollisions(tree1, tree2)
+					Expect(err).ShouldNot(HaveOccurred())
+					Expect(len(collisions)).To(Equal(0))
+				})
 			})
-			It("returns no collisions", func() {
-				collisions, err := FindCollisions(tree1, tree2)
-				Expect(err).ShouldNot(HaveOccurred())
-				Expect(len(collisions)).To(Equal(0))
+			Describe("child free", func() {
+				BeforeEach(func() {
+					tree1 = NewNode("parent", "value", 42, NewChildren(
+						NewNode("child1", "value1", 42, NewChildren(
+							NewNode("grandson1", "value1", 42, NewChildren(
+								NewNode("great-grandson1", "value1", 42, nil))))),
+						NewNode("child2", "value2", 42, NewChildren(
+							NewNode("grandson1", "value1", 42, nil))),
+						NewNode("child3", "value3", 42, nil)))
+					tree2 = NewNode("parent", "value", 42, NewChildren(
+						NewNode("child1", "value1", 42, NewChildren(
+							NewNode("grandson1", "value1", 42, NewChildren(
+								NewNode("great-grandson1", "value1", 42, nil))))),
+						NewNode("child2", "value2", 42, NewChildren(
+							NewNode("grandson1", "value1", 42, nil))),
+						NewNode("child3", "value3", 42, nil)))
+				})
+				It("returns no collisions", func() {
+					collisions, err := FindCollisions(tree1, tree2)
+					Expect(err).ShouldNot(HaveOccurred())
+					Expect(len(collisions)).To(Equal(0))
+				})
 			})
 
 		})

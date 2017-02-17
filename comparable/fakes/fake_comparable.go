@@ -49,6 +49,9 @@ func (f FakeComparable) Scope() (CollisionScope, error) {
 // func NewNode(name string, v1 string, v2 int, children []FakeComparable) FakeComparable {
 // 	return NewNode(name, v1, v2, children)
 // }
+func NewChildren(children ...FakeComparable) []FakeComparable {
+	return children
+}
 
 func NewNode(name string, v1 string, v2 int, children []FakeComparable) FakeComparable {
 	return FakeComparable{
