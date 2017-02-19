@@ -1,6 +1,10 @@
 package comparable
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/davecgh/go-spew/spew"
+)
 
 // "errors"
 
@@ -11,7 +15,7 @@ type Comparable interface {
 	Mismatches(Comparable) (Mismatches, error)
 	Children() (ComparableItems, error)
 	Scope() (CollisionScope, error)
-	// CanCompare() (bool, error)
+	CanCompare(Comparable) (bool, error)
 }
 
 type ComparableNamedItems []ComparableItemWithName
@@ -32,14 +36,18 @@ type Mismatches []string
 type CollisionScope interface{}
 
 func FindCollisions(c1 ComparableItemWithName, c2 ComparableItemWithName) (collisions Collisions, err error) {
-	if !canCompare(c1, c2) {
-		return nil, errors.New("can not comare")
+	c2comparable, _ := c2.(Comparable)
+	canCompare, err := c1.CanCompare(c2comparable)
+	if !canCompare {
+		return nil, err
 	}
 
 	mismatches, err := c1.Mismatches(c2)
 	if err != nil {
 		return nil, err
 	}
+
+	spew.Dump(mismatches)
 
 	if len(mismatches) > 0 {
 		collision, err := NewCollision(ComparableNamedItems{c1, c2}, mismatches)
@@ -53,11 +61,13 @@ func FindCollisions(c1 ComparableItemWithName, c2 ComparableItemWithName) (colli
 	if err != nil {
 		return nil, err
 	}
+	// spew.Dump(children1)
 
 	children2, err := c2.Children()
 	if err != nil {
 		return nil, err
 	}
+	// spew.Dump(children2)
 
 	childrenCollisions, err := FindCollisionsInItems(children1.toComparableNamedItems(), children2.toComparableNamedItems())
 	if err != nil {
@@ -81,6 +91,7 @@ func FindCollisionsInItems(list1 ComparableNamedItems, list2 ComparableNamedItem
 
 	commonPairs, left1, left2 := CompareByName(list1.toNamedItems(), list2.toNamedItems())
 
+	// spew.Dump(commonPairs)
 	for _, pair := range commonPairs {
 		first, ok := pair.First.(ComparableItemWithName)
 		if !ok {
@@ -89,14 +100,6 @@ func FindCollisionsInItems(list1 ComparableNamedItems, list2 ComparableNamedItem
 		second, ok := pair.Second.(ComparableItemWithName)
 		if !ok {
 			return nil, errors.New("wrong conversion")
-		}
-		mismatches, err := first.Mismatches(second)
-		if len(mismatches) > 0 {
-			collision, err := NewCollision(ComparableNamedItems{first, second}, mismatches)
-			if err != nil {
-				return nil, err
-			}
-			collisions = append(collisions, collision)
 		}
 		childrenCollisions, err := FindCollisions(first, second)
 		if err != nil {

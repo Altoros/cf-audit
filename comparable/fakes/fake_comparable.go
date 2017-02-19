@@ -15,6 +15,8 @@ type FakeComparable struct {
 	Parent       *FakeComparable
 }
 
+type FakeComparables []FakeComparable
+
 func (f FakeComparable) GetName() string {
 	return f.Name
 }
@@ -46,11 +48,27 @@ func (f FakeComparable) Scope() (CollisionScope, error) {
 	return f.Name, nil
 }
 
+func (f1 FakeComparable) CanCompare(c2 Comparable) (bool, error) {
+	comparableWithName, ok := c2.(ComparableItemWithName)
+	if !ok {
+		return false, errors.New("Can not compare")
+	}
+	if f1.GetName() != comparableWithName.GetName() {
+		return false, errors.New("Different names")
+	}
+	return true, nil
+}
+
 // func NewNode(name string, v1 string, v2 int, children []FakeComparable) FakeComparable {
 // 	return NewNode(name, v1, v2, children)
 // }
-func NewChildren(children ...FakeComparable) []FakeComparable {
+
+func NewNodeList(children ...FakeComparable) FakeComparables {
 	return children
+}
+
+func NewChildren(children ...FakeComparable) FakeComparables {
+	return NewNodeList(children...)
 }
 
 func NewNode(name string, v1 string, v2 int, children []FakeComparable) FakeComparable {
@@ -68,4 +86,12 @@ func fromComparable(c Comparable) (FakeComparable, error) {
 		return FakeComparable{}, errors.New("convert error")
 	}
 	return result, nil
+}
+
+func (source FakeComparables) ToComparableNamedItems() ComparableNamedItems {
+	targetList := make(ComparableNamedItems, len(source))
+	for i, item := range source {
+		targetList[i] = item
+	}
+	return targetList
 }
